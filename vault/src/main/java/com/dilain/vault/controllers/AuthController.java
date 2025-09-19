@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dilain.vault.config.JwtUtils;
-import com.dilain.vault.dtos.RegisterRequest;
+import com.dilain.vault.dtos.auth.LoginRequest;
+import com.dilain.vault.dtos.auth.RegisterRequest;
 import com.dilain.vault.entities.User;
 import com.dilain.vault.repositories.UserRepository;
 import com.dilain.vault.services.CustomUserDetailsService;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,11 +31,11 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
-        UserDetails user = userDetailsService.loadUserByUsername(request.getUsername());
+        UserDetails user = userDetailsService.loadUserByUsername(request.username());
         return ResponseEntity.ok(jwtUtil.generateToken(user.getUsername()));
     }
 
@@ -52,11 +52,4 @@ public class AuthController {
 
         return ResponseEntity.ok("User registered successfully");
     }
-}
-
-@Data
-class AuthRequest {
-    private String username;
-    private String password;
-    // getters & setters
 }
