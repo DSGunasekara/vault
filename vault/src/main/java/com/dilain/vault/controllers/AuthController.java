@@ -17,7 +17,6 @@ import com.dilain.vault.dtos.auth.RegisterRequest;
 import com.dilain.vault.entities.User;
 import com.dilain.vault.enums.ResponseStatus;
 import com.dilain.vault.repositories.UserRepository;
-import com.dilain.vault.services.CustomUserDetailsService;
 import com.dilain.vault.utils.ApiResponse;
 
 import jakarta.validation.Valid;
@@ -35,12 +34,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<String>> login(@Valid @RequestBody LoginRequest request) {
+        try {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
-
+           
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(new ApiResponse<String>(ResponseStatus.ERROR, e.getMessage(), null));
+        }
+ 
         Optional<User> user = userRepository.findByUsername(request.username());
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
                 return ResponseEntity.badRequest().body(new ApiResponse<String>(ResponseStatus.ERROR, "Username is not found", null));
         }
         String secret = jwtUtil.generateToken(user.get().getUsername());
