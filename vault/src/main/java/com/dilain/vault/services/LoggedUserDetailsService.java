@@ -1,5 +1,8 @@
 package com.dilain.vault.services;
 
+import java.util.Collections;
+
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+public class LoggedUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -22,10 +25,11 @@ public class CustomUserDetailsService implements UserDetailsService {
             throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                       .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername())
-                .password(user.getPasswordHash()) // should be encoded
-                // .roles(user.getRole())
-                .build();
+        return new LoggedUserDetails(
+            user.getId(),
+            user.getUsername(),
+            user.getPasswordHash(),
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+    );
     }
 }
