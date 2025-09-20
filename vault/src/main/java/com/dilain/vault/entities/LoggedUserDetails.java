@@ -1,4 +1,4 @@
-package com.dilain.vault.services;
+package com.dilain.vault.entities;
 
 import java.util.Collection;
 
