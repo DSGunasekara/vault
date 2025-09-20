@@ -21,15 +21,14 @@ public class LoggedUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) 
+    public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                      .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new LoggedUserDetails(
-            user.getId(),
-            user.getUsername(),
-            user.getPasswordHash(),
-            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-    );
+                user.getId(),
+                user.getUsername(),
+                user.getPasswordHash(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
     }
 }

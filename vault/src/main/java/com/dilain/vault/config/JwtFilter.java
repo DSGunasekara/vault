@@ -31,8 +31,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain) throws IOException, ServletException {
+            HttpServletResponse response,
+            FilterChain chain) throws IOException, ServletException {
         String authHeader = request.getHeader("Authorization");
 
         String token = null;
@@ -52,8 +52,8 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (jwtUtil.validateToken(token, userDetails.getUsername())) {
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
@@ -76,19 +76,17 @@ public class JwtFilter extends OncePerRequestFilter {
         ApiResponse<Object> body = new ApiResponse<>(
                 ResponseStatus.ERROR,
                 message, // will contain only "Bad credentials" etc.
-                null
-        );
+                null);
         objectMapper.writeValue(response.getOutputStream(), body);
         // response.getWriter().write(message);
     }
 
     private void handleServerError(HttpServletResponse response, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-         ApiResponse<Object> body = new ApiResponse<>(
+        ApiResponse<Object> body = new ApiResponse<>(
                 ResponseStatus.ERROR,
                 message, // will contain only "Bad credentials" etc.
-                null
-        );
+                null);
         objectMapper.writeValue(response.getOutputStream(), body);
     }
 }

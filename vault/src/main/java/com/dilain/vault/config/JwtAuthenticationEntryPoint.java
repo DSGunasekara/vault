@@ -1,4 +1,5 @@
 package com.dilain.vault.config;
+
 import com.dilain.vault.enums.ResponseStatus;
 import com.dilain.vault.utils.ApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,16 +21,15 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+            HttpServletResponse response,
+            AuthenticationException authException) throws IOException {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         ApiResponse<Object> body = new ApiResponse<>(
                 ResponseStatus.ERROR,
                 authException.getMessage(), // will contain only "Bad credentials" etc.
-                null
-        );
+                null);
 
         objectMapper.writeValue(response.getOutputStream(), body);
     }

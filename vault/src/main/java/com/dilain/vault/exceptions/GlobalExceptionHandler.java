@@ -81,8 +81,7 @@ public class GlobalExceptionHandler {
         ApiResponse<Void> response = new ApiResponse<>(
                 ResponseStatus.ERROR,
                 message,
-                null
-        );
+                null);
         return ResponseEntity.status(status).body(response);
     }
 }

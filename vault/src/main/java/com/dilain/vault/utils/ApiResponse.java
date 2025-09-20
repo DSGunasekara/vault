@@ -8,8 +8,7 @@ public record ApiResponse<T>(
         ResponseStatus status,
         String message,
         T data,
-        Instant timestamp
-) {
+        Instant timestamp) {
     public ApiResponse(ResponseStatus status, String message, T data) {
         this(status, message, data, Instant.now());
     }
