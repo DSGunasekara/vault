@@ -50,6 +50,18 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.FORBIDDEN, "You do not have permission to access this resource.");
     }
 
+
+    @ExceptionHandler(UsernameAlreadyTakenException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDuplicatedUsernames(UsernameAlreadyTakenException ex) {
+        return build(HttpStatus.FORBIDDEN, "Username already exits.");
+    }
+
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotFound(NotFoundException ex) {
+        return build(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
     /* 💡 VALIDATION EXCEPTIONS */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidation(MethodArgumentNotValidException ex) {
