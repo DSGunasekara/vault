@@ -11,10 +11,12 @@ import com.dilain.vault.entities.User;
 import com.dilain.vault.exceptions.UserNotFoundException;
 import com.dilain.vault.repositories.ProjectRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserService userService;
